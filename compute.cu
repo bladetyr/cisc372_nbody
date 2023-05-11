@@ -30,6 +30,9 @@ __global__ void accelMatrix(vector3 values, vector3 accels){
 
 __global__ void sumMatrix(vector3 values, vector3 accels){
 	//sum up the rows of our matrix to get effect on each entity, then update velocity and position.
+	int i = blockIdx.x * blockDim.x + threadIdx.x;
+	int j = blockIdx.y * blockDim.y + threadIdx.y;
+	int k;
 	for (i;i<NUMENTITIES;i++){
 		vector3 accel_sum={0,0,0};
 		for (j;j<NUMENTITIES;j++){
@@ -51,21 +54,28 @@ __global__ void sumMatrix(vector3 values, vector3 accels){
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
 	int i,j,k;
-	// vector3* values=(vector3*)malloc(sizeof(vector3)*NUMENTITIES*NUMENTITIES);
-	// vector3** accels=(vector3**)malloc(sizeof(vector3*)*NUMENTITIES);
+	vector3* dValues=(vector3*)malloc(sizeof(vector3)*NUMENTITIES*NUMENTITIES);
+	vector3* dAccels=(vector3*)malloc(sizeof(vector3*)*NUMENTITIES);
 
 	//cuda versions of values and accels
 	cudaMalloc((void**)&dValues, sizeof(float)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&dAccels, sizeof(float)*NUMENTITIES);
 	//copy those to run on GPU
 	cudaMemcpy(dValues, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudeMemcpy(dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
+	//copy the global variables too
+	cudaMalloc((void**)&d_hVel, sizeof(vector3)*NUMENTITIES);
+	cudaMalloc((void**)&d_hPos, sizeof(vector3)*NUMENTITIES);
+	cudaMalloc((void**)&d_mass, sizeof(double)*NUMENTITIES);
 
 	accelMatrix<<<1,1>>>(dValues, dAccels);
 	sumMatrix<<<1,1>>>(dValues, dAccels);
 
-	free(accels);
-	free(values);
+	//free(accels);
+	//free(values);
 	cudaFree(dValues);
 	cudaFree(dAccels);
+	cudaFree(d_mass);
+	cudaFree(d_hVel);
+	cudaFree(d_hPos);
 }
