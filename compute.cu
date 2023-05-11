@@ -4,13 +4,14 @@
 #include "config.h"
 
 //separating compute() into cuda functions
-__global__ void accelMatrix(vector3 values, vector3 accels){
+__global__ void accelMatrix(vector3 values, vector3 accels, vector3 d_hVel, vector3 d_hPos, double d_mass){
 	//make an acceleration matrix which is NUMENTITIES squared in size;
 	for (int i=0;i<NUMENTITIES;i++)
 		accels[i]=&values[i*NUMENTITIES];
 	//first compute the pairwise accelerations.  Effect is on the first argument.
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	int j = blockIdx.y * blockDim.y + threadIdx.y;
+	int k;
 	for (i;i<NUMENTITIES;i++){
 		for (j;j<NUMENTITIES;j++){
 			if (i==j) {
@@ -28,7 +29,7 @@ __global__ void accelMatrix(vector3 values, vector3 accels){
 	}
 }
 
-__global__ void sumMatrix(vector3 values, vector3 accels){
+__global__ void sumMatrix(vector3 d_hVel, vector3 d_hPos, vector3 accels){
 	//sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	int j = blockIdx.y * blockDim.y + threadIdx.y;
@@ -72,8 +73,8 @@ void compute(){
 	cudaMemcpy(d_hVel, hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 
-	accelMatrix<<<1,1>>>(dValues, dAccels);
-	sumMatrix<<<1,1>>>(dValues, dAccels);
+	accelMatrix<<<1,1>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
+	sumMatrix<<<1,1>>>(d_hVel, d_hPos, dAccels);
 
 	//free(accels);
 	//free(values);
