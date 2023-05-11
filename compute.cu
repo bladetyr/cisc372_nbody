@@ -42,8 +42,8 @@ __global__ void sumMatrix(vector3 values, vector3 accels){
 		//compute the new velocity based on the acceleration and time interval
 		//compute the new position based on the velocity and time interval
 		for (k=0;k<3;k++){
-			hVel[i][k]+=accel_sum[k]*INTERVAL;
-			hPos[i][k]=hVel[i][k]*INTERVAL;
+			d_hVel[i][k]+=accel_sum[k]*INTERVAL;
+			d_hPos[i][k]=d_hVel[i][k]*INTERVAL;
 		}
 	}
 }
@@ -54,8 +54,9 @@ __global__ void sumMatrix(vector3 values, vector3 accels){
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
 	int i,j,k;
-	vector3* dValues=(vector3*)malloc(sizeof(vector3)*NUMENTITIES*NUMENTITIES);
-	vector3* dAccels=(vector3*)malloc(sizeof(vector3*)*NUMENTITIES);
+	vector3* dValues;
+	vector3* dAccels;
+	double d_mass;
 
 	//cuda versions of values and accels
 	cudaMalloc((void**)&dValues, sizeof(float)*NUMENTITIES*NUMENTITIES);
@@ -67,6 +68,9 @@ void compute(){
 	cudaMalloc((void**)&d_hVel, sizeof(vector3)*NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3)*NUMENTITIES);
 	cudaMalloc((void**)&d_mass, sizeof(double)*NUMENTITIES);
+
+	cudaMemcpy(d_hVel, hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 
 	accelMatrix<<<1,1>>>(dValues, dAccels);
 	sumMatrix<<<1,1>>>(dValues, dAccels);
