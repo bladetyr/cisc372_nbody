@@ -63,8 +63,8 @@ void compute(){
 	cudaMalloc((void**)&dValues, sizeof(float)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&dAccels, sizeof(float)*NUMENTITIES);
 	//copy those to run on GPU
-	cudaMemcpy(dValues, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
+	//cudaMemcpy(dValues, values, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
+	//cudaMemcpy(dAccels, hPos, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
 	//copy the global variables too
 	cudaMalloc((void**)&d_hVel, sizeof(vector3)*NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3)*NUMENTITIES);
