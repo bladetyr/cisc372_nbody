@@ -38,11 +38,11 @@ __global__ void sumMatrix(vector3 *d_hVel, vector3 *d_hPos, vector3 **accels){
 	//int j = 0;
 	//int k;
 	if(int i = threadIdx.x < NUMENTITIES) {
-		printf("summing?\n");
+		//printf("summing?\n");
 		vector3 accel_sum={0,0,0};
 		for (int j = 0;j<NUMENTITIES;j++){
 			for (int k=0;k<3;k++){
-				printf("summing!!\n");
+				//printf("summing!!\n");
 				accel_sum[k]+=accels[i][j][k];
 			}
 		}
