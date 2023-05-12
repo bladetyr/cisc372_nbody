@@ -57,7 +57,7 @@ __global__ void sumMatrix(vector3 d_hVel, vector3 d_hPos, vector3 accels){
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
 	vector3* dValues;
-	vector3* dAccels;
+	vector3** dAccels;
 	double* d_mass;
 
 	//cuda versions of values and accels
