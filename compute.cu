@@ -3,6 +3,7 @@
 #include <math.h>
 #include "vector.h"
 #include "config.h"
+#include "compute.h"
 
 //separating compute() into cuda functions
 __global__ void accelMatrix(vector3 *values, vector3 **accels, vector3 *d_hVel, vector3 *d_hPos, double *d_mass){
