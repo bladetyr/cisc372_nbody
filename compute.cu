@@ -67,13 +67,13 @@ void compute(){
 	//cudaMemcpy(dValues, dValues, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
 	//cudaMemcpy(dAccels, dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
 	//copy the global variables too
-	cudaMalloc((void**)&d_hVel, sizeof(vector3)*NUMENTITIES);
-	cudaMalloc((void**)&d_hPos, sizeof(vector3)*NUMENTITIES);
-	cudaMalloc((void**)&d_mass, sizeof(vector3)*NUMENTITIES);
+	cudaMalloc((void**)&d_hVel, sizeof(double)*NUMENTITIES);
+	cudaMalloc((void**)&d_hPos, sizeof(double)*NUMENTITIES);
+	cudaMalloc((void**)&d_mass, sizeof(double)*NUMENTITIES);
 
-	cudaMemcpy(d_hVel, hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_mass, mass, sizeof(vector3), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_hVel, hVel, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_hPos, hPos, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_mass, mass, sizeof(double), cudaMemcpyHostToDevice);
 
 	accelMatrix<<<1,1>>>(*dValues, *dAccels, *d_hVel, *d_hPos, *d_mass);
 	cudaDeviceSynchronize();
