@@ -41,9 +41,10 @@ __global__ void sumMatrix(vector3 *d_hVel, vector3 *d_hPos, vector3 **accels){
 		printf("summing?\n");
 		vector3 accel_sum={0,0,0};
 		for (int j = 0;j<NUMENTITIES;j++){
-			for (int k=0;k<3;k++)
+			for (int k=0;k<3;k++){
 				printf("summing!!\n");
 				accel_sum[k]+=accels[i][j][k];
+			}
 		}
 		//compute the new velocity based on the acceleration and time interval
 		//compute the new position based on the velocity and time interval
