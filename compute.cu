@@ -39,7 +39,7 @@ __global__ void sumMatrix(vector3 *d_hVel, vector3 *d_hPos, vector3 **accels){
 	if(int i = threadIdx.x < NUMENTITIES) {
 		vector3 accel_sum={0,0,0};
 		for (int j = 0;j<NUMENTITIES;j++){
-			for (k=0;k<3;k++)
+			for (int k=0;k<3;k++)
 				accel_sum[k]+=accels[i][j][k];
 		}
 		//compute the new velocity based on the acceleration and time interval
