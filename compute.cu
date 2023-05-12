@@ -18,6 +18,9 @@ __global__ void accelMatrix(vector3 *values, vector3 **accels, vector3 *d_hVel, 
 	//int k;
 	int spacing = NUMENTITIES / NUMTHREADS;
 	for (i = threadIdx.x*spacing; i < threadIdx.x*spacing+spacing; i++){
+		if(i == NUMENTITIES / NUMTHREADS){
+			break;
+		}
 		for (int j = 0;j<NUMENTITIES;j++){
 			if (i==j) {
 				FILL_VECTOR(accels[i][j],0,0,0);
