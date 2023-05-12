@@ -16,7 +16,8 @@ __global__ void accelMatrix(vector3 *values, vector3 **accels, vector3 *d_hVel, 
 	//int j = blockIdx.y * blockDim.y + threadIdx.y;
 	//int j = 0;
 	//int k;
-	if (i < NUMENTITIES){
+	int spacing = NUMENTITIES / NUMTHREADS;
+	for (i = threadIdx.x*spacing; i < threadIdx.x*spacing+spacing; i++){
 		for (int j = 0;j<NUMENTITIES;j++){
 			if (i==j) {
 				FILL_VECTOR(accels[i][j],0,0,0);
@@ -39,7 +40,8 @@ __global__ void sumMatrix(vector3 *d_hVel, vector3 *d_hPos, vector3 **accels){
 	//int j = blockIdx.y * blockDim.y + threadIdx.y;
 	//int j = 0;
 	//int k;
-	if(int i = threadIdx.x < NUMENTITIES) {
+	int spacing = NUMENTITIES / NUMTHREADS;
+	if(i = threadIdx.x*spacing; i < threadIdx.x*spacing+spacing; i++) {
 		//printf("summing?\n");
 		vector3 accel_sum={0,0,0};
 		for (int j = 0;j<NUMENTITIES;j++){
@@ -81,10 +83,10 @@ void compute(){
 	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_mass, mass, sizeof(double), cudaMemcpyHostToDevice);
 
-	accelMatrix<<<1,108>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
+	accelMatrix<<<1, NUMTHREADS>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
 	cudaCheckError();
 	cudaDeviceSynchronize();
-	sumMatrix<<<1,108>>>(d_hVel, d_hPos, dAccels);
+	sumMatrix<<<1, NUMTHREADS>>>(d_hVel, d_hPos, dAccels);
 	cudaCheckError();
 	cudaDeviceSynchronize();
 	//free(accels);
