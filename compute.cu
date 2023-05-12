@@ -16,11 +16,7 @@ __global__ void accelMatrix(vector3 *values, vector3 **accels, vector3 *d_hVel, 
 	//int j = blockIdx.y * blockDim.y + threadIdx.y;
 	//int j = 0;
 	//int k;
-	int spacing = NUMENTITIES / NUMTHREADS;
-	for (i = threadIdx.x*spacing; i < threadIdx.x*spacing+spacing; i++){
-		if(i == NUMENTITIES / NUMTHREADS){
-			break;
-		}
+	if (i < NUMENTITIES){
 		for (int j = 0;j<NUMENTITIES;j++){
 			if (i==j) {
 				FILL_VECTOR(accels[i][j],0,0,0);
@@ -85,10 +81,10 @@ void compute(){
 	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_mass, mass, sizeof(double), cudaMemcpyHostToDevice);
 
-	accelMatrix<<<1, NUMTHREADS>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
+	accelMatrix<<<1,108>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
 	cudaCheckError();
 	cudaDeviceSynchronize();
-	sumMatrix<<<1, NUMTHREADS>>>(d_hVel, d_hPos, dAccels);
+	sumMatrix<<<1,108>>>(d_hVel, d_hPos, dAccels);
 	cudaCheckError();
 	cudaDeviceSynchronize();
 	//free(accels);
