@@ -41,6 +41,7 @@ __global__ void sumMatrix(vector3 *d_hVel, vector3 *d_hPos, vector3 **accels){
 	//int j = 0;
 	//int k;
 	int spacing = NUMENTITIES / NUMTHREADS;
+	int i = 0;
 	if(i = threadIdx.x*spacing; i < threadIdx.x*spacing+spacing; i++) {
 		//printf("summing?\n");
 		vector3 accel_sum={0,0,0};
