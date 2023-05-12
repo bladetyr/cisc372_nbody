@@ -77,7 +77,6 @@ void randomFill(int start, int count)
 void printSystem(FILE* handle){
 	int i,j;
 	for (i=0;i<NUMENTITIES;i++){
-		printf("here!");
 		fprintf(handle,"pos=(");
 		for (j=0;j<3;j++){
 			fprintf(handle,"%lf,",hPos[i][j]);
