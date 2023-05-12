@@ -87,9 +87,7 @@ void compute(){
 	//free(values);
 
 	cudaMemcpy(hVel, d_hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyDeviceToHost);
-	cudaDeviceSynchronize();
 	cudaMemcpy(hPos, d_hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyDeviceToHost);
-	cudaDeviceSynchronize();
 	cudaMemcpy(mass, d_mass, sizeof(double), cudaMemcpyDeviceToHost);	
 	cudaDeviceSynchronize();
 
