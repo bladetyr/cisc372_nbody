@@ -80,8 +80,10 @@ void compute(){
 	cudaMemcpy(d_mass, mass, sizeof(double), cudaMemcpyHostToDevice);
 
 	accelMatrix<<<1,108>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
+	cudaGetLastError();
 	cudaDeviceSynchronize();
 	sumMatrix<<<1,108>>>(d_hVel, d_hPos, dAccels);
+	cudaGetLastError();
 	cudaDeviceSynchronize();
 	//free(accels);
 	//free(values);
