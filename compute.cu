@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include "vector.h"
 #include "config.h"
@@ -80,18 +81,21 @@ void compute(){
 	cudaMemcpy(d_mass, mass, sizeof(double), cudaMemcpyHostToDevice);
 
 	accelMatrix<<<1,108>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
-	cudaGetLastError();
+	cudaCheckError();
 	cudaDeviceSynchronize();
 	sumMatrix<<<1,108>>>(d_hVel, d_hPos, dAccels);
-	cudaGetLastError();
+	cudaCheckError();
 	cudaDeviceSynchronize();
 	//free(accels);
 	//free(values);
 
 
 	cudaMemcpy(hVel, d_hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaCheckError();
 	cudaMemcpy(hPos, d_hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaCheckError();
 	cudaMemcpy(mass, d_mass, sizeof(double), cudaMemcpyDeviceToHost);	
+	cudaCheckError();
 	cudaDeviceSynchronize();
 
 	cudaFree(dAccels);
