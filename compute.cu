@@ -56,9 +56,9 @@ __global__ void sumMatrix(vector3 d_hVel, vector3 d_hPos, vector3 accels){
 //Returns: None
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
-	vector3** dValues;
-	vector3** dAccels;
-	double** d_mass;
+	vector3* dValues;
+	vector3* dAccels;
+	double* d_mass;
 
 	//cuda versions of values and accels
 	cudaMalloc((void**)&dValues, sizeof(float)*NUMENTITIES*NUMENTITIES);
@@ -74,7 +74,7 @@ void compute(){
 	cudaMemcpy(d_hVel, hVel, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_hPos, hPos, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 
-	accelMatrix<<<1,1>>>(&dValues, &dAccels, &d_hVel, &d_hPos, &d_mass);
+	accelMatrix<<<1,1>>>(&dValues, dAccels, &d_hVel, &d_hPos, &d_mass);
 	cudaDeviceSynchronize();
 	//sumMatrix<<<1,1>>>(&d_hVel, &d_hPos, &dAccels);
 	cudaDeviceSynchronize();
