@@ -9,18 +9,18 @@ __global__ void accelMatrix(vector3 *values, vector3 **accels, vector3 *d_hVel, 
 	for (int i=0;i<NUMENTITIES;i++)
 		accels[i]=&values[i*NUMENTITIES];
 	//first compute the pairwise accelerations.  Effect is on the first argument.
-	int i = threadIdx.x;
+	//int i = threadIdx.x;
 	//int j = blockIdx.y * blockDim.y + threadIdx.y;
-	int j = 0;
-	int k;
-	for (i;i<NUMENTITIES;i++){
-		for (j;j<NUMENTITIES;j++){
+	//int j = 0;
+	//int k;
+	for (int i = threadIdx.x;i<NUMENTITIES;i++){
+		for (int j = 0;j<NUMENTITIES;j++){
 			if (i==j) {
 				FILL_VECTOR(accels[i][j],0,0,0);
 			}
 			else{
 				vector3 distance;
-				for (k=0;k<3;k++) distance[k]=d_hPos[i][k]-d_hPos[j][k];
+				for (int k = 0;k<3;k++) distance[k]=d_hPos[i][k]-d_hPos[j][k];
 				double magnitude_sq=distance[0]*distance[0]+distance[1]*distance[1]+distance[2]*distance[2];
 				double magnitude=sqrt(magnitude_sq);
 				double accelmag=-1*GRAV_CONSTANT*d_mass[j]/magnitude_sq;
