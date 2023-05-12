@@ -4,7 +4,7 @@
 #include "config.h"
 
 //separating compute() into cuda functions
-__global__ void accelMatrix(vector3 values, vector3* accels, vector3 d_hVel, vector3 d_hPos, double d_mass){
+__global__ void accelMatrix(vector3* values, vector3* accels, vector3* d_hVel, vector3* d_hPos, double* d_mass){
 	//make an acceleration matrix which is NUMENTITIES squared in size;
 	for (int i=0;i<NUMENTITIES;i++)
 		accels[i]=&values[i*NUMENTITIES];
@@ -67,15 +67,15 @@ void compute(){
 	//cudaMemcpy(dValues, dValues, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
 	//cudaMemcpy(dAccels, dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
 	//copy the global variables too
-	cudaMalloc((void**)&d_hVel, sizeof(double)*NUMENTITIES);
-	cudaMalloc((void**)&d_hPos, sizeof(double)*NUMENTITIES);
+	cudaMalloc((void**)&d_hVel, sizeof(vector3)*NUMENTITIES);
+	cudaMalloc((void**)&d_hPos, sizeof(vector3)*NUMENTITIES);
 	cudaMalloc((void**)&d_mass, sizeof(double)*NUMENTITIES);
 
-	cudaMemcpy(d_hVel, hVel, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_hPos, hPos, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_hVel, hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_mass, mass, sizeof(double), cudaMemcpyHostToDevice);
 
-	accelMatrix<<<1,1>>>(dValues, dAccels, *d_hVel, *d_hPos, *d_mass);
+	accelMatrix<<<1,1>>>(dValues, dAccels, d_hVel, d_hPos, d_mass);
 	cudaDeviceSynchronize();
 	sumMatrix<<<1,1>>>(*d_hVel, *d_hPos, *dAccels);
 	cudaDeviceSynchronize();
