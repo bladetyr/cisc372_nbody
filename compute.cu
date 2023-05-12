@@ -58,14 +58,14 @@ __global__ void sumMatrix(vector3 d_hVel, vector3 d_hPos, vector3 accels){
 void compute(){
 	//vector3* dValues;
 	//vector3* dAccels;
-	//double* d_mass;
+	double* d_mass;
 
 	//cuda versions of values and accels
 	cudaMalloc((void**)&dValues, sizeof(float)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&dAccels, sizeof(float)*NUMENTITIES);
 	//copy those to run on GPU
-	//cudaMemcpy(dValues, values, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
-	//cudaMemcpy(dAccels, hPos, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(dValues, dValues, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(dAccels, dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
 	//copy the global variables too
 	cudaMalloc((void**)&d_hVel, sizeof(vector3)*NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3)*NUMENTITIES);
