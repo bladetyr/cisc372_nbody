@@ -69,7 +69,7 @@ void compute(){
 	//copy the global variables too
 	cudaMalloc((void**)&d_hVel, sizeof(double)*NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(double)*NUMENTITIES);
-	cudaMalloc((void**)&d_mass, sizeof(double)*NUMENTITIES);
+	//cudaMalloc((void**)&d_mass, sizeof(double)*NUMENTITIES);
 
 	cudaMemcpy(d_hVel, hVel, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_hPos, hPos, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
