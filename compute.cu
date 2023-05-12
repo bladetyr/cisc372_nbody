@@ -76,15 +76,14 @@ void compute(){
 
 	accelMatrix<<<1,1>>>(&dValues, &dAccels, &d_hVel, &d_hPos, &d_mass);
 	cudaDeviceSynchronize();
-	sumMatrix<<<1,1>>>(&d_hVel, &d_hPos, &dAccels);
+	//sumMatrix<<<1,1>>>(&d_hVel, &d_hPos, &dAccels);
 	cudaDeviceSynchronize();
 	//free(accels);
 	//free(values);
-	/*
+	
 	cudaFree(dAccels);
 	cudaFree(dValues);
 	cudaFree(d_mass);
 	cudaFree(d_hVel);
 	cudaFree(d_hPos);
-	*/
 }
