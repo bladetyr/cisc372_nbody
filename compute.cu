@@ -64,8 +64,8 @@ void compute(){
 	cudaMalloc((void**)&dValues, sizeof(float)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&dAccels, sizeof(float)*NUMENTITIES);
 	//copy those to run on GPU
-	cudaMemcpy(dValues, dValues, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(dAccels, dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
+	//cudaMemcpy(dValues, dValues, sizeof(float)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
+	//cudaMemcpy(dAccels, dAccels, sizeof(float)*NUMENTITIES, cudaMemcpyHostToDevice);
 	//copy the global variables too
 	cudaMalloc((void**)&d_hVel, sizeof(vector3)*NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3)*NUMENTITIES);
@@ -75,13 +75,14 @@ void compute(){
 	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 
 	accelMatrix<<<1,1>>>(&dValues, &dAccels, &d_hVel, &d_hPos, &d_mass);
+	cudaDeviceSynchronize();
 	sumMatrix<<<1,1>>>(&d_hVel, &d_hPos, &dAccels);
-
+	cudaDeviceSynchronize();
 	//free(accels);
 	//free(values);
-	cudaFree(dValues);
 	cudaFree(dAccels);
+	cudaFree(dValues);
 	cudaFree(d_mass);
 	cudaFree(d_hVel);
-	cudaFree(d_hPos);
+	cudaFree(d_Pos);
 }
