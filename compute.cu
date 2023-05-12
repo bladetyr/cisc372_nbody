@@ -40,9 +40,7 @@ __global__ void sumMatrix(vector3 *d_hVel, vector3 *d_hPos, vector3 **accels){
 	//int j = blockIdx.y * blockDim.y + threadIdx.y;
 	//int j = 0;
 	//int k;
-	int spacing = NUMENTITIES / NUMTHREADS;
-	int i = 0;
-	if(i = threadIdx.x*spacing; i < (threadIdx.x*spacing+spacing); i++) {
+	if(int i = threadIdx.x < NUMENTITIES) {
 		//printf("summing?\n");
 		vector3 accel_sum={0,0,0};
 		for (int j = 0;j<NUMENTITIES;j++){
