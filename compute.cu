@@ -80,9 +80,11 @@ void compute(){
 	cudaDeviceSynchronize();
 	//free(accels);
 	//free(values);
+	/*
 	cudaFree(dAccels);
 	cudaFree(dValues);
 	cudaFree(d_mass);
 	cudaFree(d_hVel);
 	cudaFree(d_hPos);
+	*/
 }
