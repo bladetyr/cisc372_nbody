@@ -58,7 +58,7 @@ __global__ void sumMatrix(vector3 d_hVel, vector3 d_hPos, vector3 accels){
 void compute(){
 	vector3* dValues;
 	vector3* dAccels;
-	double d_mass;
+	double* d_mass;
 
 	//cuda versions of values and accels
 	cudaMalloc((void**)&dValues, sizeof(float)*NUMENTITIES*NUMENTITIES);
