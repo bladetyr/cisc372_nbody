@@ -6,14 +6,15 @@
 //separating compute() into cuda functions
 __global__ void accelMatrix(vector3 *values, vector3 **accels, vector3 *d_hVel, vector3 *d_hPos, double *d_mass){
 	//make an acceleration matrix which is NUMENTITIES squared in size;
-	for (int i=0;i<NUMENTITIES;i++)
+	int i = threadIdx.x;
+	if (i < NUMENTITIES)
 		accels[i]=&values[i*NUMENTITIES];
 	//first compute the pairwise accelerations.  Effect is on the first argument.
 	//int i = threadIdx.x;
 	//int j = blockIdx.y * blockDim.y + threadIdx.y;
 	//int j = 0;
 	//int k;
-	for (int i = threadIdx.x;i<NUMENTITIES;i++){
+	if (i < NUMENTITIES){
 		for (int j = 0;j<NUMENTITIES;j++){
 			if (i==j) {
 				FILL_VECTOR(accels[i][j],0,0,0);
