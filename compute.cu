@@ -75,7 +75,7 @@ void compute(){
 	cudaMemcpy(d_hPos, hPos, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_mass, mass, sizeof(double), cudaMemcpyHostToDevice);
 
-	accelMatrix<<<1,1>>>(*dValues, *dAccels, *d_hVel, *d_hPos, *d_mass);
+	accelMatrix<<<1,1>>>(dValues, dAccels, *d_hVel, *d_hPos, *d_mass);
 	cudaDeviceSynchronize();
 	sumMatrix<<<1,1>>>(*d_hVel, *d_hPos, *dAccels);
 	cudaDeviceSynchronize();
